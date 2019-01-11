@@ -2,3 +2,4 @@ Flask
 gunicorn
 urllib3
 Pillow
+requests
