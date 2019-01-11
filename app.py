@@ -177,12 +177,12 @@ def test():
     ava = request.form["ava"]
     return send_file(quotes_g(name, text, data, ava), mimetype='image/png')
 
-@app.route('/sss')
-def sss():
-    name = 'test'
-    text = 'testでも'
-    data = '3920-12-13'
-    ava = 'https://pp.userapi.com/c846521/v846521389/16b027/xM6dvPAFGV4.jpg'
+@app.route('/test')
+def Quote_test():
+    name = 'People'
+    text = 'Quote text'
+    data = '2019-01-12'
+    ava = 'https://i.imgur.com/ZxLbhil.jpg'
     return send_file(quotes_g(name, text, data, ava), mimetype='image/png')
 
 @app.route('/img/<site>/<int:size>')
