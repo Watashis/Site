@@ -3,115 +3,82 @@ from PIL import ImageFont
 from PIL import Image
 from PIL import ImageDraw
 
+def image(name, imgsize):
+    def prepare_mask(size, antialias=2):
+        mask = Image.new(
+            'L', (size[0] * antialias, size[1] * antialias), 0)
+        ImageDraw.Draw(mask).ellipse((0, 0) + mask.size, fill=255)
+        return mask.resize(size, Image.ANTIALIAS)
 
-def prepare_mask(size, antialias=2):
-    mask = Image.new(
-        'L', (size[0] * antialias, size[1] * antialias), 0)
-    ImageDraw.Draw(mask).ellipse((0, 0) + mask.size, fill=255)
-    return mask.resize(size, Image.ANTIALIAS)
+    def crop(im, s):
+        w, h = im.size
+        k = w / s[0] - h / s[1]
+        if k > 0:
+            im = im.crop(((w - h) / 2, 0, (w + h) / 2, h))
+        elif k < 0:
+            im = im.crop((0, (h - w) / 2, w, (h + w) / 2))
+        return im.resize(s, Image.ANTIALIAS)
 
-    # Обрезает и масштабирует изображение под заданный размер.
-    # Вообще, немногим отличается от .thumbnail, но по крайней мере
-    # у меня результат получается куда лучше.
+    font, font1, font2 = ImageFont.truetype('6.otf', size=240),ImageFont.truetype('5.otf', size=190),ImageFont.truetype('2.ttf', size=90)
+    color,size = (0, 0, 0, 0), (1900, 1900)
+    image = Image.new('RGBA', (2000, 3000), color)
+    draw = ImageDraw.Draw(image)
+    draw.rectangle(((0, 00), (2000, 3000)), fill="#40acfa")
+    draw.rectangle(((25, 25), (1975, 2975)), fill="gray")
+    draw.ellipse((28, 28, 1972, 1972), fill=(64, 172, 250, 255))
+    im2 = Image.open('ava.JPG')
+    im2 = crop(im2, size)
+    im2.putalpha(prepare_mask(size, 4))
+    image.paste(im2, (53, 53), im2)
 
+    #text
+    history_T,lists_T = "History","List"
+    #box
+    bounding_box,historyB,listB,listTB,historyTB = [0, 1800, 2000, 2300], [1000, 2250, 2000, 2400],[0, 2250, 1000, 2400],[0, 2400, 1000, 3000],[1000, 2400, 2000, 3000]
 
-def crop(im, s):
-    w, h = im.size
-    k = w / s[0] - h / s[1]
-    if k > 0:
-        im = im.crop(((w - h) / 2, 0, (w + h) / 2, h))
-    elif k < 0:
-        im = im.crop((0, (h - w) / 2, w, (h + w) / 2))
-    return im.resize(s, Image.ANTIALIAS)
+    x1, y1, x2, y2 = bounding_box
+    w, h = draw.textsize(name, font=font)
+    x = (x2 - x1 - w)/2 + x1
+    y = (y2 - y1 - h)/2 + y1
+    draw.text((x, y), name,  align='center', font=font)
+    lists = '394/118/83/191/3\nAll/P/W/C/D\nTime: 1120.4 H'
+    history = 'Another\nAnother\nYakusoku no Neverland\nTate no Yuusha no Naria...'
 
+    #history
+    x1, y1, x2, y2 = historyB
+    w, h = draw.textsize(history_T, font=font1)
+    print(w, h)
+    x = (x2 - x1 - w)/2 + x1
+    y = (y2 - y1 - h)/2 + y1
+    draw.text((x, y), history_T,  align='center', font=font1)
 
-# font = ImageFont.truetype('2.ttf', size=200)
-font = ImageFont.truetype('6.otf', size=240)
+    #list
+    x1, y1, x2, y2 = listB
+    print(draw.textsize(lists_T, font=font1))
+    w, h = 221, 227
+    x = (x2 - x1 - w)/2 + x1
+    y = (y2 - y1 - h)/2 + y1
+    draw.text((x, y), lists_T,  align='center', font=font1)
 
-font2 = ImageFont.truetype('2.ttf', size=90)
+    #listT
+    x1, y1, x2, y2 = listTB
+    w, h = draw.textsize(lists, font=font2)
+    x = (x2 - x1 - w)/2 + x1
+    y = ((y2 - y1 - h)/2 + y1) - 100
+    draw.text((x, y), lists,  align='left', font=font2)
 
-font1 = ImageFont.truetype('5.otf', size=190)
+    #historyT
+    x1, y1, x2, y2 = historyTB
+    w, h = draw.textsize(history, font=font2)
+    x = (x2 - x1 - w)/2 + x1
+    y = ((y2 - y1 - h)/2 + y1) - 100
+    draw.text((x, y), history,  align='left', font=font2)
 
-color = (0, 0, 0, 0)
-image = Image.new('RGBA', (2000, 3000), color)
-draw = ImageDraw.Draw(image)
-# For easy reading
+    if size != 0:
+        basewidth = imgsize
+        wpercent = (basewidth/float(image.size[0]))
+        hsize = int((float(image.size[1])*float(wpercent)))
+        image = image.resize((basewidth, hsize), Image.ANTIALIAS)
+    return image
 
-draw.rectangle(((0, 00), (2000, 3000)), fill="#40acfa")
-
-draw.rectangle(((25, 25), (1975, 2975)), fill="gray")
-
-draw.ellipse((28, 28, 1972, 1972), fill=(64, 172, 250, 255))
-#draw.ellipse((53, 53, 1947, 1947), fill="gray")
-
-size = (1900, 1900)
-im2 = Image.open('ava.JPG')
-im2 = crop(im2, size)
-im2.putalpha(prepare_mask(size, 4))
-print('')
-print(im2.size)
-print('')
-image.paste(im2, (53, 53), im2)
-#image.paste(im2, [0, 0])
-
-
-message = 'Watashi'
-bounding_box = [0, 1800, 2000, 2300]
-x1, y1, x2, y2 = bounding_box  # For easy reading
-
-# Calculate the width and height of the text to be drawn, given font size
-w, h = draw.textsize(message, font=font)
-# Calculate the mid points and offset by the upper left corner of the bounding box
-x = (x2 - x1 - w)/2 + x1
-y = (y2 - y1 - h)/2 + y1
-# print(w, h)
-# print(x, y)
-
-# draw.rectangle([x1, y1, x2, y2])
-draw.text((x, y), message,  align='center', font=font)
-# draw.text((50, 200), message,  align='center', font=font)
-
-# draw.text((300,2300), "Anime", (255,255,255), font=font1)
-# draw.text((1280,2300), "TvShow", (255,255,255), font=font1)
-
-# draw.text((50,2450), "300/150/40/10\nTime: 30 часов", (63,169,245), font=font2)
-# draw.text((1030,2450), "300/150/40/10\nTime: 30 часов", (63,169,245), font=font2)
-history = 'Another\nAnother\nYakusoku no Neverland\nTate no Yuusha no Naria...'
-
-bounding_box = [0, 2200, 1000, 2300]
-x1, y1, x2, y2 = bounding_box  # For easy reading
-text = "List"
-w, h = draw.textsize(message, font=font1)
-x = (x2 - x1 - w)/2 + x1
-y = (y2 - y1 - h)/2 + y1
-print(w, h)
-print(x, y)
-# draw.rectangle([x1, y1, x2, y2])
-draw.text((x, y), text,  align='center', font=font1)
-
-bounding_box = [1000, 2200, 2000, 2300]
-x1, y1, x2, y2 = bounding_box  # For easy reading
-text = "History"
-w, h = draw.textsize(message, font=font1)
-x = (x2 - x1 - w)/2 + x1
-y = (y2 - y1 - h)/2 + y1
-print(w, h)
-print(x, y)
-# draw.rectangle([x1, y1, x2, y2])
-draw.text((x, y), text,  align='center', font=font1)
-
-
-text = history
-x = 1050
-y = 2380
-
-draw.text((x, y), text,  align='left', font=font2)
-
-
-text = "300/150/40/10\nTime: None H"
-x = 100
-y = 2380
-draw.text((x, y), text,  align='center', font=font2)
-
-# image.show()
-image.save("static/test.png")
+image('Watashi',300).show()

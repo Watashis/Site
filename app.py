@@ -1,74 +1,48 @@
 from flask import Flask
-import PIL
+import PIL,urllib.request,json,io
 from PIL import ImageFont
 from PIL import Image
 from PIL import ImageDraw
 from flask import send_file
-import urllib.request
-import json
-import io
 
 app = Flask(__name__, static_url_path='')
-
 
 def database():
     with urllib.request.urlopen("http://shikimori.org/api/users/326282/anime_rates?limit=100000") as url:
         data = json.loads(url.read().decode())
-        # print(data)
-    # print(data[350])
-    lists = (len(data)) - 1
-    a = []
-    i = 0
-    plan = 0
-    watching = 0
-    completed = 0
-    dropped = 0
-    time = 0
-    #print(data[i]['status'])
-    while i <= lists:
+    a, i, time = [0, 0, 0, 0, 0], 0, 0
+    a[0] = (len(data)) - 1
+    while i <= a[0]:
         if data[i]['status'] == "planned":
-            plan += 1
+            a[1] += 1
         if data[i]['status'] == "watching":
-            watching += 1
-            time += data[i]['episodes'] * 24
+            a[2] += 1
         if data[i]['status'] == "completed":
-            completed += 1
-            time += data[i]['episodes'] * 24
+            a[3] += 1
         if data[i]['status'] == "dropped":
-            dropped += 1
+            a[4] += 1
+        time += data[i]['episodes']
         i += 1
-    i = 0
-    a.append(lists)
-    a.append(plan)
-    a.append(watching)
-    a.append(completed)
-    a.append(dropped)
-    a = str(a[0])+'/'+str(a[1])+'/'+str(a[2])+'/'+str(a[3])+'/'+str(a[4]) + '\n' + 'Time: ' + str(time) + ' H'
+    time = (time * 24) / 60
+    a = '{}/{}/{}/{}/{}\nAll/P/W/C/D\nTime: {} H'.format(a[0], a[1], a[2], a[3], a[4], str(time))
     return a
-
 
 def story():
     with urllib.request.urlopen("https://shikimori.org/api/users/326282/history?limit=30") as url:
         data = json.loads(url.read().decode())
-
-    i = 0
-    name = []
+    i, a = 0, []
     while i <= (len(data) - 1):
         if (data[i]['description'])[:10] == 'Просмотрен':
             tmp = data[i]['target']['name']
             if len(tmp) > 23:
-                name.append((tmp[:23] + '...'))
+                a.append((tmp[:23] + '...'))
             else:
-                name.append(data[i]['target']['name'])
-        # print(data[i]['target']['name'])
-        if len(name) == 4:
+                a.append(data[i]['target']['name'])
+        if len(a) == 4:
             break
-        # print(data[i]['description'])
         i += 1
-    # print(name)
-    name = str(name[0]) + '\n' +str(name[1]) + '\n' +str(name[2]) + '\n' +str(name[3])
-    return name
-
+    a = '{}\n{}\n{}\n{}\n'.format(a[0], a[1], a[2], a[3])
+    return a
 
 def image(name, imgsize):
     def prepare_mask(size, antialias=2):
@@ -85,56 +59,60 @@ def image(name, imgsize):
         elif k < 0:
             im = im.crop((0, (h - w) / 2, w, (h + w) / 2))
         return im.resize(s, Image.ANTIALIAS)
-        
-    font = ImageFont.truetype('6.otf', size=240)
-    font2 = ImageFont.truetype('2.ttf', size=90)
-    font1 = ImageFont.truetype('5.otf', size=190)
-    color = (0, 0, 0, 0)
+
+    font, font1, font2 = ImageFont.truetype('6.otf', size=240),ImageFont.truetype('5.otf', size=190),ImageFont.truetype('2.ttf', size=90)
+    color,size = (0, 0, 0, 0), (1900, 1900)
     image = Image.new('RGBA', (2000, 3000), color)
     draw = ImageDraw.Draw(image)
     draw.rectangle(((0, 00), (2000, 3000)), fill="#40acfa")
     draw.rectangle(((25, 25), (1975, 2975)), fill="gray")
     draw.ellipse((28, 28, 1972, 1972), fill=(64, 172, 250, 255))
-    size = (1900, 1900)
     im2 = Image.open('ava.JPG')
     im2 = crop(im2, size)
     im2.putalpha(prepare_mask(size, 4))
     image.paste(im2, (53, 53), im2)
-    message = name
-    bounding_box = [0, 1800, 2000, 2300]
+
+    #text
+    history_T,lists_T = "History","List"
+    #box
+    bounding_box,historyB,listB,listTB,historyTB = [0, 1800, 2000, 2300], [1000, 2250, 2000, 2400],[0, 2250, 1000, 2400],[0, 2400, 1000, 3000],[1000, 2400, 2000, 3000]
+
     x1, y1, x2, y2 = bounding_box
-    w, h = draw.textsize(message, font=font)
+    w, h = draw.textsize(name, font=font)
     x = (x2 - x1 - w)/2 + x1
     y = (y2 - y1 - h)/2 + y1
-    draw.text((x, y), message,  align='center', font=font)
+    draw.text((x, y), name,  align='center', font=font)
     lists = database()
     history = story()
-    bounding_box = [0, 2200, 1000, 2300]
-    x1, y1, x2, y2 = bounding_box
-    text = "List"
-    w, h = draw.textsize(message, font=font1)
-    x = (x2 - x1 - w)/2 + x1
-    y = (y2 - y1 - h)/2 + y1
-    draw.text((x, y), text,  align='center', font=font1)
 
-    bounding_box = [1000, 2200, 2000, 2300]
-    x1, y1, x2, y2 = bounding_box
-    text = "History"
-    w, h = draw.textsize(message, font=font1)
+    #history
+    x1, y1, x2, y2 = historyB
+    w, h = draw.textsize(history_T, font=font1)
     x = (x2 - x1 - w)/2 + x1
     y = (y2 - y1 - h)/2 + y1
-    draw.text((x, y), text,  align='center', font=font1)
-    text = history
-    x = 1050
-    y = 2380
-    draw.text((x, y), text,  align='left', font=font2)
-    text = lists
-    x = 100
-    y = 2380
-    draw.text((x, y), text,  align='center', font=font2)
-    size = imgsize
+    draw.text((x, y), history_T,  align='center', font=font1)
+
+    #list
+    x1, y1, x2, y2 = listB
+    w, h = 221, 227
+    x = (x2 - x1 - w)/2 + x1
+    y = (y2 - y1 - h)/2 + y1
+    draw.text((x, y), lists_T,  align='center', font=font1)
+
+    #listT
+    x1, y1, x2, y2 = listTB
+    w, h = draw.textsize(lists, font=font2)
+    x,y = ((x2 - x1 - w)/2 + x1), 2467.0
+    draw.text((x, y), lists,  align='center', font=font2)
+
+    #historyT
+    x1, y1, x2, y2 = historyTB
+    w, h = draw.textsize(history, font=font2)
+    x,y = ((x2 - x1 - w)/2 + x1), 2467.0
+    draw.text((x, y), history,  align='center', font=font2)
+
     if size != 0:
-        basewidth = size
+        basewidth = imgsize
         wpercent = (basewidth/float(image.size[0]))
         hsize = int((float(image.size[1])*float(wpercent)))
         image = image.resize((basewidth, hsize), Image.ANTIALIAS)
@@ -169,13 +147,10 @@ def index():
 
 @app.route('/img/<site>/<int:size>')
 def imgs(site, size):
+    img = image("Kanashina", size)
     if site == 'shiki':
-        img = image("Watashis",size,)
-    else:
-        img = image("Kanashina", size)
+        img = image("Watashis", size,)
     return send_file(img, mimetype='image/png')
-
-
 
   # никуя не робит でも
 if __name__ == "__main__":
