@@ -1,3 +1,7 @@
-This is bad code, no need to pay attention.
+# Example of collaboration between Flask and PIL
+- The site is able to generate images with text.
+  - At the moment, the site can generate 2 image.
+    1. card with profile information of the site ```shikimori.org```.
+    2. and quotes.
 #
-Это говнокод, не нужно обращать внимание.
+**The website creates pictures without any temporary files**
