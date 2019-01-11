@@ -5,3 +5,8 @@
     2. and quotes.
 #
 **The website creates pictures without any temporary files**
+#
+# Quote example
+[Quote](https://watashis.herokuapp.com/test)
+
+![Quote](https://watashis.herokuapp.com/test)
