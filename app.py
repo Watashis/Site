@@ -149,17 +149,19 @@ def image(name, imgsize):
 
 @app.route("/")
 def index():
-    hui = '''<html xmlns="http://www.w3.org/1999/xhtml"><head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    html = '''<!DOCTYPE html>
+    <html>
+    <head>
+    <meta http-equiv="Content-Type" content="text/html charset=UTF-8">
     <title>Типа сайт</title>
 	<style>
-	.img {
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	margin-top: -425;
-	margin-left: -425;
-	}
+	   .img {
+	       position: fixed;
+	       top: 50%;
+	       left: 50%;
+	       margin-top: -425;
+	       margin-left: -425;
+	   }
     </style>
     </head>
     <body>
@@ -167,7 +169,7 @@ def index():
 		<img src="https://i.imgur.com/XNKiV4M.png">
 	</div>
     </body></html>'''
-    return hui
+    return html
 
 @app.route("/quotes", methods=["POST"])
 def test():
