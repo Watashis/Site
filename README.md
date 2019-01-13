@@ -35,4 +35,4 @@ a = Image.open(image)
 a.show()
 ```
 
-![Quote](https://i.imgur.com/JSpj7tD.png)
+![Quote](https://i.imgur.com/gA35chN.png)
