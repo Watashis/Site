@@ -24,11 +24,11 @@ import requests, io
 from PIL import Image
 
 data = {
-    'name':'Nerv (anime Evangelion)',
-    'text':'God’s in his Heaven… All’s right with the world',
-    "date":'1995-10-04',
-    "ava":'https://i.imgur.com/1xMbCHD.png'
-    }
+  'name':'Nerv (anime Evangelion)',
+  'text':'God’s in his Heaven… All’s right with the world',
+  'date':'1995-10-04',
+  'ava':'https://i.imgur.com/1xMbCHD.png'
+}
 image = requests.post("https://watashis.herokuapp.com/quotes", data=data)
 image = io.BytesIO(image.content)
 a = Image.open(image)
