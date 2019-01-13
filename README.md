@@ -10,3 +10,8 @@
 [Quote](https://watashis.herokuapp.com/test)
 
 ![Quote](https://watashis.herokuapp.com/test)
+
+
+
+# Api to get a quote
+Send a post request to the link ``http://watashis.herokuapp.com/quotes`` data ```name``` (name quoted) ```text``` (text quote) ```data``` (year-month-day of the quote) ```ava``` (link to the avatar or photo quoted)
