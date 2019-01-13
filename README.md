@@ -14,4 +14,4 @@
 
 
 # Api to get a quote
-Send a post request to the link ``http://watashis.herokuapp.com/quotes`` data ```name``` (name quoted) ```text``` (text quote) ```data``` (year-month-day of the quote) ```ava``` (link to the avatar or photo quoted)
+Send a post request to the link ``http://watashis.herokuapp.com/quotes`` data ```name``` (name quoted) ```text``` (text quote) ```date``` (year-month-day of the quote) ```ava``` (link to the avatar or photo quoted)
