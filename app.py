@@ -23,7 +23,7 @@ def crop(im, s):
         im = im.crop((0, (h - w) / 2, w, (h + w) / 2))
     return im.resize(s, Image.ANTIALIAS)
 
-def quotes_g(name, text, data, ava):
+def quotes_g(name, text, date, ava):
     def quote(info):
         color, bg, size = (0, 0, 0, 0), ['bg.png', 'bg1.png'], (200, 200)
         image = Image.new('RGBA', (700, 400), color)
@@ -46,11 +46,11 @@ def quotes_g(name, text, data, ava):
         if bg == 'bg1.png':
             color2 = (255,255,255)
         draw.text((x, y), message,  align='center', font=font3)
-        text = '© {}\n@ {}'.format(info['name'], info['data'])
+        text = '© {}\n@ {}'.format(info['name'], info['date'])
         draw.text((30, 300),  text, color2, align='left', font=font3)
         return image
 
-    info = {"text": text,"name": name,'ava': ava,'data': data }
+    info = {"text": text,"name": name,'ava': ava,'date': date }
     img, img_io = quote(info), io.BytesIO()
     img.save(img_io, 'png', quality=90)
     img_io.seek(0)
@@ -174,9 +174,9 @@ def index():
 def test():
     name = request.form["name"]
     text = request.form["text"]
-    data = request.form["data"]
+    date = request.form["data"]
     ava = request.form["ava"]
-    return send_file(quotes_g(name, text, data, ava), mimetype='image/png')
+    return send_file(quotes_g(name, text, date, ava), mimetype='image/png')
 
 @app.route('/test')
 def Quote_test():
