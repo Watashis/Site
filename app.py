@@ -174,7 +174,7 @@ def index():
 def test():
     name = request.form["name"]
     text = request.form["text"]
-    date = request.form["data"]
+    date = request.form["date"]
     ava = request.form["ava"]
     return send_file(quotes_g(name, text, date, ava), mimetype='image/png')
 
