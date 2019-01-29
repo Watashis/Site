@@ -3,8 +3,15 @@
   - At the moment, the site can generate 2 image.
     1. card with profile information of the site ```shikimori.org```.
     2. and quotes.
-#
+    
 **The website creates pictures without any temporary files**
+#
+# Creating quotes online.
+[Link](https://watashis.herokuapp.com/create#quote)
+![Quote](https://i.imgur.com/uoADhZg.png)
+
+
+
 #
 # Quote example
 [Quote](https://watashis.herokuapp.com/test)
