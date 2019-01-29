@@ -1,9 +1,9 @@
 from flask import Flask
-import PIL,urllib.request,json,io, textwrap,random, requests
+import PIL,urllib.request,json,io, textwrap,random, requests, base64
 from PIL import ImageFont
 from PIL import Image
 from PIL import ImageDraw
-from flask import send_file
+from flask import send_file, render_template
 from flask import request
 
 app = Flask(__name__, static_url_path='')
@@ -170,12 +170,21 @@ def index():
     </body></html>'''
     return html
 
+@app.route("/create")
+def create():
+    return render_template('index.html', title='Home')
+
 @app.route("/quotes", methods=["POST"])
 def test():
     name = request.form["name"]
     text = request.form["text"]
     date = request.form["date"]
     ava = request.form["ava"]
+    if request.form["base64"] == 'true':
+       img = quotes_g(name, text, date, ava)
+       img = base64.b64encode(img.getvalue())
+       return img
+
     return send_file(quotes_g(name, text, date, ava), mimetype='image/png')
 
 @app.route('/test')
