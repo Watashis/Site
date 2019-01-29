@@ -27,6 +27,7 @@ data = {
   'name':'Nerv (anime Evangelion)',
   'text':'God’s in his Heaven… All’s right with the world',
   'date':'1995-10-04',
+  'base64':'false',
   'ava':'https://i.imgur.com/1xMbCHD.png'
 }
 image = requests.post("https://watashis.herokuapp.com/quotes", data=data)
