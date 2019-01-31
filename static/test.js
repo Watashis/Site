@@ -1,7 +1,7 @@
 
- /* Данная функция создаёт кроссбраузерный объект XMLHTTP */
- function getXmlHttp() {
-    var xmlhttp;
+
+function getXmlHttp() {
+    let xmlhttp;
     try {
       xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
     } catch (e) {
