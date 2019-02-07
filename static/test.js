@@ -11,7 +11,7 @@ function getXmlHttp() {
         }
     }
     
-    if (!xmlhttp && XMLHttpRequest === void 0) {
+    if (!xmlhttp && typeof XMLHttpRequest != 'undefined') {
       xmlhttp = new XMLHttpRequest()
     }
     
