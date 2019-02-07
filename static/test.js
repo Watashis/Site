@@ -1,5 +1,5 @@
 function getXmlHttp() {
-    let xmlhttp
+    var xmlhttp
     
     try {
       xmlhttp = new ActiveXObject("Msxml2.XMLHTTP")
