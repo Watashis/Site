@@ -24,7 +24,7 @@ function create() {
     const text = document.getElementById("Text").value
     const date = document.getElementById("Date").value
 
-    const xmlhttp = getXmlHttp()
+    let xmlhttp = getXmlHttp()
 
     xmlhttp.open('POST', '/quotes', true)
     xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
